@@ -53,223 +53,85 @@ class _ButtonControlsState extends State<ButtonControls> {
 }
 
 Widget _buildButtonControls(List<NetworkEntity> networkEntities, bool isConnected, BuildContext context, List<NetworkSettings> networkSettings) {
-
   return Scaffold(
-      backgroundColor: background,
-      appBar: isConnected
-          ? PreferredSize(
-              preferredSize: Size.zero, // AppBar with zero height
-              child: Container(), // Empty container to occupy zero space
-            )
-          : AppBar(
-              title: Text(
-                'Button Controls',
-                style: GoogleFonts.roboto(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              backgroundColor: darkappbar,
-              iconTheme: const IconThemeData(color: Colors.white),
-            ),
-      body: SingleChildScrollView(
-          child: Container(
+    backgroundColor: background,
+    appBar: isConnected
+        ? PreferredSize(
+      preferredSize: Size.zero, // AppBar with zero height
+      child: Container(), // Empty container to occupy zero space
+    )
+        : AppBar(
+      title: Text(
+        'Button Controls',
+        style: GoogleFonts.roboto(
+          textStyle: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
+      backgroundColor: darkappbar,
+      iconTheme: const IconThemeData(color: Colors.white),
+    ),
+    body: SingleChildScrollView(
+      child: Container(
         color: background,
         child: Column(
           children: [
             isConnected
                 ? Container(
-                    color: lggreen,
-                    height: 48,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.wifi,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 8),
-                        // Adjust the spacing as needed
-                        Text(
-                          networkSettings.last.incomingIp,
-                          style: GoogleFonts.roboto(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ))
+              color: lggreen,
+              height: 48,
+              width: MediaQuery.of(context).size.width,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.wifi,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    networkSettings.last.incomingIp,
+                    style: GoogleFonts.roboto(
+                      textStyle: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
                 : Container(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                    padding: EdgeInsets.only(top: 20, left: 20),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 120,
-                          width: 120,
-                          child: MyCircularButton(id: 1,networkSettings: networkSettings,networkEntity: networkEntities),
-                        ),
-                      ],
-                    )),
-                Padding(
-                  padding: EdgeInsets.only(top: 20, left: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 2,networkSettings: networkSettings,networkEntity: networkEntities),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 3,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 0, left: 20, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child:  MyCircularButton(id: 4,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 5,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 0, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 6,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 7,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child:  MyCircularButton(id: 8,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 9,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 10,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 11,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 12,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 20, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 13,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 14,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 20, left: 0, right: 0, bottom: 0),
-                  child: Container(
-                    height: 120,
-                    width: 120,
-                    child: MyCircularButton(id: 15,networkSettings: networkSettings,networkEntity: networkEntities)
-                  ),
-                ),
-              ],
+            Wrap(
+              alignment: WrapAlignment.spaceEvenly,
+              children: List.generate(
+                15,
+                    (index) {
+                  final id = index + 1;
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: MediaQuery.of(context).size.width * 0.35,
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      child: MyCircularButton(
+                        id: id,
+                        networkSettings: networkSettings,
+                        networkEntity: networkEntities,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      )));
+      ),
+    ),
+  );
 }
+

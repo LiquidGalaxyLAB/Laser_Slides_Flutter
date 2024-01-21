@@ -25,9 +25,9 @@ class MyCircularButton extends StatefulWidget {
 
   const MyCircularButton(
       {Key? key,
-      required this.id,
-      required this.networkSettings,
-      required this.networkEntity})
+        required this.id,
+        required this.networkSettings,
+        required this.networkEntity})
       : super(key: key);
 
   @override
@@ -71,45 +71,50 @@ class CircularButton extends StatelessWidget {
   final List<NetworkEntity> networkEntity;
   const CircularButton(
       {Key? key,
-      required this.onTap,
-      required this.isButtonPressed ,
-      required this.id,
-      required this.networkSettings,
-      required this.networkEntity})
+        required this.onTap,
+        required this.isButtonPressed ,
+        required this.id,
+        required this.networkSettings,
+        required this.networkEntity})
       : super(key: key);
 
-List<String> get oscPath {
-  return [
-    networkSettings.last.incomingIp, // Destination IP
-    networkSettings.last.incomingPort, // Port
-    "${networkSettings.last.incomingStartPath}/${networkEntity[id-1].buttonPressedCommand}"
-  ];  // OSC address
-}
+  List<String> get oscPath {
+    return [
+      networkSettings.last.incomingIp, // Destination IP
+      networkSettings.last.incomingPort, // Port
+      "${networkSettings.last.incomingStartPath}/${networkEntity[id-1].buttonPressedCommand}"
+    ];  // OSC address
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => sl<NetworkBloc>()..add(GetSavedNetworkConfigEvent()),
-        child: BlocBuilder<NetworkBloc, NetworkConfigState>(
-          builder: (context, state) {
-            if (state is NetworkConfigStateLoaded){
-              return Builder(
-                  builder: (context0) => Stack(
+      create: (_) => sl<NetworkBloc>()..add(GetSavedNetworkConfigEvent()),
+      child: BlocBuilder<NetworkBloc, NetworkConfigState>(
+        builder: (context, state) {
+          if (state is NetworkConfigStateLoaded) {
+            return Builder(
+              builder: (context0) => LayoutBuilder(
+                builder: (context, constraints) {
+                  // Adjust the values based on the constraints or MediaQuery
+                  double containerSize = constraints.maxWidth *0.9;
+                  double iconSize = containerSize * 0.5;
+
+                  return Stack(
                     alignment: Alignment.topRight,
                     children: [
                       GestureDetector(
                         onTap: () {
-                          try{
+                          try {
                             List<String> oscPath = [
                               networkSettings.last.incomingIp, // Destination IP
                               networkSettings.last.incomingPort, // Port
-                              "${networkSettings.last.incomingStartPath}/${state.networkEntities[id-1].buttonPressedCommand}"
+                              "${networkSettings.last.incomingStartPath}/${state.networkEntities[id - 1].buttonPressedCommand}"
                             ];
                             onTap();
                             print("this is osc path hai $oscPath");
-                            BlocProvider.of<OSCSenderBloc>(context0)
-                                .add(SendOscEvent(oscPath));
-                          }catch(e){
+                            BlocProvider.of<OSCSenderBloc>(context0).add(SendOscEvent(oscPath));
+                          } catch (e) {
                             //show snackbar
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -117,24 +122,23 @@ List<String> get oscPath {
                               ),
                             );
                           }
-
                         },
                         child: Column(
                           children: [
                             AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
-                              height: 100,
-                              width: 100,
+                              height: containerSize*0.98,
+                              width: containerSize,
                               decoration: BoxDecoration(
                                 color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(80),
+                                borderRadius: BorderRadius.circular(containerSize * 0.8),
                                 boxShadow: !isButtonPressed
                                     ? []
                                     : [
                                   BoxShadow(
                                     color: Colors.grey.shade500,
-                                    spreadRadius: 1,
-                                    blurRadius: 15,
+                                    spreadRadius: containerSize * 0.01,
+                                    blurRadius: containerSize * 0.15,
                                     offset: const Offset(6, 6),
                                   ),
                                   //lighter shadow
@@ -149,34 +153,37 @@ List<String> get oscPath {
                               child: Icon(
                                 Icons.lightbulb_circle_outlined,
                                 color: !isButtonPressed ? Colors.grey : Colors.green[700],
-                                size: 50,
+                                size: iconSize,
                               ),
                             ),
                             Text(
-                              (state.networkEntities.isNotEmpty && id >= 0 && id < state.networkEntities.length)
-                                  ? state.networkEntities[id-1].label
+                              (state.networkEntities.isNotEmpty &&
+                                  id >= 0 &&
+                                  id < state.networkEntities.length)
+                                  ? state.networkEntities[id - 1].label
                                   : "Button $id",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 10,
+                                fontSize: containerSize * 0.2,
                               ),
                             ),
-
                           ],
                         ),
                       ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyEditButtonConfig(
-                                    id: id,
-                                  )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyEditButtonConfig(
+                                id: id,
+                              ),
+                            ),
+                          );
                         },
                         child: Container(
-                          margin: EdgeInsets.all(4),
-                          padding: EdgeInsets.all(4),
+                          margin: EdgeInsets.all(containerSize * 0.06),
+                          padding: EdgeInsets.all(containerSize * 0.06),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: lgblue, // Customize the color as needed
@@ -184,23 +191,25 @@ List<String> get oscPath {
                           child: Icon(
                             Icons.edit_outlined,
                             color: Colors.white,
-                            size: 16,
+                            size: iconSize * 0.32,
                           ),
                         ),
                       ),
                     ],
-                  ));
-            }else if(state is NetworkConfigStateLoading){
-              return const Center(child: CircularProgressIndicator());
-            }
-            return Container(
-              height: 20,
-              color: Colors.red,
+                  );
+                },
+              ),
             );
+          } else if (state is NetworkConfigStateLoading) {
+            return const Center(child: CircularProgressIndicator());
           }
-        )
+          return Container(
+            height: 20,
+            color: Colors.red,
+          );
+        },
+      ),
     );
-
-
   }
+
 }

@@ -27,36 +27,91 @@ class MyEditButtonConfig extends StatefulWidget {
 class EditButtonConfig extends State<MyEditButtonConfig> {
   final TextEditingController _labelTextController = TextEditingController();
   final TextEditingController _buttonPressedController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController _buttonReleasedController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<NetworkBloc>()..add(GetSavedNetworkConfigEvent()),
       child: Scaffold(
-        backgroundColor: background,
-        appBar: AppBar(
-          title: const Text(
-            'Edit Configuration',
-            style: TextStyle(color: Colors.white),
+          backgroundColor: background,
+          appBar: AppBar(
+            title: const Text(
+              'Edit Configuration',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: darkappbar,
+            iconTheme: IconThemeData(color: Colors.white),
           ),
-          backgroundColor: darkappbar,
-          iconTheme: IconThemeData(color: Colors.white),
-        ),
-        body: BlocBuilder<NetworkBloc,NetworkConfigState> (
-          builder: (context,state){
-            if(state.networkEntities.isNotEmpty){
-              if (widget.id >= 0 && widget.id < state.networkEntities.length) {
-                _labelTextController.text = state.networkEntities[widget.id].label;
-                _buttonPressedController.text = state.networkEntities[widget.id].buttonPressedCommand;
-                _buttonReleasedController.text = state.networkEntities[widget.id].buttonReleasedCommand;
+          body: BlocBuilder<NetworkBloc,NetworkConfigState> (
+            builder: (context,state){
+              if(state.networkEntities.isNotEmpty){
+                if (widget.id >= 0 && widget.id < state.networkEntities.length) {
+                  _labelTextController.text = state.networkEntities[widget.id].label;
+                  _buttonPressedController.text = state.networkEntities[widget.id].buttonPressedCommand;
+                  _buttonReleasedController.text = state.networkEntities[widget.id].buttonReleasedCommand;
+                }
               }
-            }
-            if(state is NetworkConfigStateLoading ){
-              return Center(child: CircularProgressIndicator());
-            }else if(state is NetworkConfigStateLoaded){
+              if(state is NetworkConfigStateLoading ){
+                return Center(child: CircularProgressIndicator());
+              }else if(state is NetworkConfigStateLoaded){
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        labelText: "Label",
+                        hintText: "eg. Btn1",
+                        controller: _labelTextController,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.01,
+                      ),
+                      CustomTextField(
+                        labelText: "Button Pressed",
+                        hintText: "eg. /beyond/general",
+                        controller: _buttonPressedController,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.01,
+                      ),
+                      CustomTextField(
+                        labelText: "Button Released",
+                        hintText: "eg. /beyond/master/blackout",
+                        controller: _buttonReleasedController,
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                      ),
+
+                      Builder(
+                        builder:(context) =>
+                            RoundedButtonWithLoading(
+                              buttonText: "Save",
+                              onPressed: (text) {
+                                BlocProvider.of<NetworkBloc>(context).add(NetworkConfigEventSave(
+                                    NetworkEntity(
+                                        id: widget.id,
+                                        label: _labelTextController.text,
+                                        buttonPressedCommand: _buttonPressedController.text,
+                                        buttonReleasedCommand: _buttonReleasedController.text,
+                                        isReleaseChecked: false))
+                                );
+                                Navigator.pushAndRemoveUntil(context,
+                                    MaterialPageRoute(builder: (context) => Home()),
+                                        (route) => false);
+                              },
+                              color: Colors.blue,
+                            ),
+                      )
+
+                      // saveNetworkButton(),
+                      // cancelNetworkButton(),
+                    ],
+                  ),
+                );
+              }
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -111,63 +166,8 @@ class EditButtonConfig extends State<MyEditButtonConfig> {
                   ],
                 ),
               );
-            }
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  CustomTextField(
-                    labelText: "Label",
-                    hintText: "Btn1",
-                    controller: _labelTextController,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  CustomTextField(
-                    labelText: "Button Pressed",
-                    hintText: "Btn1",
-                    controller: _buttonPressedController,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  CustomTextField(
-                    labelText: "Button Released",
-                    hintText: "Btn1",
-                    controller: _buttonReleasedController,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                  ),
-
-                  Builder(
-                    builder:(context) =>
-                        RoundedButtonWithLoading(
-                          buttonText: "Save",
-                          onPressed: (text) {
-                            BlocProvider.of<NetworkBloc>(context).add(NetworkConfigEventSave(
-                                NetworkEntity(
-                                    id: widget.id,
-                                    label: _labelTextController.text,
-                                    buttonPressedCommand: _buttonPressedController.text,
-                                    buttonReleasedCommand: _buttonReleasedController.text,
-                                    isReleaseChecked: false))
-                            );
-                            Navigator.pushAndRemoveUntil(context,
-                                MaterialPageRoute(builder: (context) => Home()),
-                                    (route) => false);
-                          },
-                          color: Colors.blue,
-                        ),
-                  )
-
-                  // saveNetworkButton(),
-                  // cancelNetworkButton(),
-                ],
-              ),
-            );
-          },
-        )
+            },
+          )
 
       ),
     );
@@ -285,7 +285,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         children: [
           Padding(
             padding:
-                const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 0),
+            const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 0),
             child: Container(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -299,7 +299,7 @@ class _CustomTextFieldState extends State<CustomTextField>
           ),
           Padding(
             padding:
-                const EdgeInsets.only(left: 20, top: 4, right: 20, bottom: 4),
+            const EdgeInsets.only(left: 20, top: 4, right: 20, bottom: 4),
             child: TextField(
               style: TextStyle(color: Colors.white),
               cursorColor: Colors.white,
@@ -325,6 +325,6 @@ class _CustomTextFieldState extends State<CustomTextField>
   @override
   void dispose() {
     _animationController.dispose();
-    super.dispose();
+    super. dispose();
   }
 }
